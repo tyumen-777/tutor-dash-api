@@ -28,6 +28,9 @@ export class Student {
   @Column({ type: String, nullable: true })
   phone: string | null;
 
+  @Column({ type: String, nullable: true })
+  teacherId: number | null;
+
   @CreateDateColumn()
   createdAt: Date;
 
