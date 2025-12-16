@@ -1,4 +1,5 @@
-import { IsEmail, IsNumber, IsString } from 'class-validator';
+import { IsEmail, IsEnum, IsNumber, IsString } from 'class-validator';
+import { Gender } from '../enum/student.enum';
 
 export class CreateStudentDto {
   @IsString()
@@ -15,4 +16,10 @@ export class CreateStudentDto {
 
   @IsString()
   phone: string;
+
+  @IsEnum(Gender)
+  gender: Gender;
+
+  @IsNumber()
+  teacherId: number;
 }

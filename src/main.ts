@@ -6,6 +6,10 @@ import { validationOptions } from './utils/validation-options';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // Включаем CORS для всех origins (для разработки)
+  app.enableCors();
+
   const config = new DocumentBuilder()
     .setTitle('Student API')
     .setDescription('Student API description')
