@@ -3,24 +3,23 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Student } from './entities/student.entity';
-import { Repository } from 'typeorm';
+// import { Student } from './entities/student.entity';
+import { student } from '../generated/prisma/client';
 import { CreateStudentDto, UpdateStudentDto } from './dto';
+import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class StudentService {
-  constructor(
-    @InjectRepository(Student)
-    private readonly studentRepository: Repository<Student>,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
-  findAll() {
-    return this.studentRepository.find();
+  async students(): Promise<student[]> {
+    return this.prisma.student.findMany();
   }
 
-  async findOne(id: number) {
-    const res = await this.studentRepository.findOneBy({ id });
+  async student(id: number) {
+    const res = await this.prisma.student.findUnique({
+      where: { id },
+    });
 
     if (!res) {
       throw new NotFoundException(`Студент с id ${id} не найден`);
@@ -30,7 +29,7 @@ export class StudentService {
   }
 
   async create(createStudentDto: CreateStudentDto) {
-    const existingStudent = await this.studentRepository.findOne({
+    const existingStudent = await this.prisma.student.findUnique({
       where: { email: createStudentDto.email },
     });
 
@@ -39,23 +38,31 @@ export class StudentService {
         `Студент с email "${createStudentDto.email}" уже существует`,
       );
     }
-    const student = this.studentRepository.create(createStudentDto);
-    return this.studentRepository.save(student);
+    const student = this.prisma.student.create({
+      data: createStudentDto,
+    });
+    return student;
   }
 
   async update(id: number, updateStudentDto: UpdateStudentDto) {
-    const existingStudent = await this.studentRepository.preload({
-      id: id,
-      ...updateStudentDto,
+    const existingStudent = await this.prisma.student.findUnique({
+      where: { id },
     });
+
     if (!existingStudent) {
-      throw new NotFoundException(`Student with id ${id} not found`);
+      throw new NotFoundException(`Студент с id ${id} не найден`);
     }
-    return this.studentRepository.save(existingStudent);
+
+    return this.prisma.student.update({
+      where: { id },
+      data: updateStudentDto,
+    });
   }
 
   async delete(id: number) {
-    const student = await this.findOne(id);
-    return this.studentRepository.remove(student);
+    const student = await this.prisma.student.delete({
+      where: { id },
+    });
+    return student;
   }
 }

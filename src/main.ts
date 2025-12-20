@@ -3,9 +3,11 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { validationOptions } from './utils/validation-options';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
 
   // Включаем CORS для всех origins (для разработки)
   app.enableCors();
@@ -18,8 +20,9 @@ async function bootstrap() {
     .build();
   const documentFactory = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
+  const port = configService.get('APP_PORT') || 3000;
 
   app.useGlobalPipes(new ValidationPipe(validationOptions));
-  await app.listen(3000);
+  await app.listen(port);
 }
 bootstrap();
