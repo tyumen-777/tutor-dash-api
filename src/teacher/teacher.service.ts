@@ -1,28 +1,46 @@
-import { ConflictException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Teacher } from './entities/teacher.entity';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+// import { Teacher } from './entities/teacher.entity';
 import { CreateTeacherDto } from './dto/create-teacher.dto';
+import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class TeacherService {
-  constructor(
-    @InjectRepository(Teacher)
-    private readonly teacherRepository: Repository<Teacher>,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async create(createTeacherDto: CreateTeacherDto) {
-    const existingTeacher = await this.teacherRepository.findOne({
-      where: { email: createTeacherDto.email },
+    const existingTeacher = await this.prisma.teacher.findUnique({
+      where: { phone: createTeacherDto.phone },
     });
 
     if (existingTeacher) {
       throw new ConflictException(
-        `Учитель c email "${createTeacherDto.email}" уже существует`,
+        `Учитель c phone "${createTeacherDto.phone}" уже существует`,
       );
     }
-    const teacher = this.teacherRepository.create(createTeacherDto);
+    const teacher = this.prisma.teacher.create({
+      data: createTeacherDto,
+    });
 
-    return this.teacherRepository.save(teacher);
+    return teacher;
+  }
+
+  teachers() {
+    return this.prisma.teacher.findMany();
+  }
+
+  async teacher(id: number) {
+    const res = await this.prisma.teacher.findUnique({
+      where: { id },
+    });
+
+    if (!res) {
+      throw new NotFoundException(`Учитель с id ${id} не найден`);
+    }
+
+    return res;
   }
 }

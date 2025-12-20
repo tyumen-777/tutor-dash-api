@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model student {
+  id        Int      @id(map: "PK_3d8016e1cb58429474a3c041904") @default(autoincrement())
+  firstName String?  @db.VarChar
+  lastName  String?  @db.VarChar
+  age       Int?
+  email     String?  @unique(map: "UQ_a56c051c91dbe1068ad683f536e") @db.VarChar
+  phone     String?  @db.VarChar
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @db.Timestamp(6)
+  teacherId String?  @db.VarChar
+}
+
+model teacher {
+  id        Int     @id(map: "PK_2f807294148612a9751dacf1026") @default(autoincrement())
+  firstName String? @db.VarChar
+  lastName  String? @db.VarChar
+  email     String? @db.VarChar
+  phone     String? @unique @db.VarChar
+}

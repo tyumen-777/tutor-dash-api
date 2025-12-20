@@ -21,5 +21,5 @@ export class CreateStudentDto {
   gender: Gender;
 
   @IsNumber()
-  teacherId: number;
+  teacherId: string;
 }

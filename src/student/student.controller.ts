@@ -12,17 +12,18 @@ import {
 import { StudentService } from './student.service';
 import { CreateStudentDto, UpdateStudentDto } from './dto';
 
-@Controller('student')
+@Controller('students')
 export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
-  @Post('create')
+  @Post()
   @HttpCode(HttpStatus.CREATED)
   createStudent(@Body() createStudentDto: CreateStudentDto) {
     return this.studentService.create(createStudentDto);
   }
 
   @Patch(':id')
+  @HttpCode(HttpStatus.OK)
   updateStudent(
     @Param('id') id: number,
     @Body() updateStudentDto: UpdateStudentDto,
@@ -32,12 +33,12 @@ export class StudentController {
 
   @Get()
   getAllStudents() {
-    return this.studentService.findAll();
+    return this.studentService.students();
   }
 
   @Get(':id')
   getStudent(@Param('id') id: number) {
-    return this.studentService.findOne(id);
+    return this.studentService.student(id);
   }
 
   @Delete(':id')
