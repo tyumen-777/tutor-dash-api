@@ -33,7 +33,20 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+# Database
 /postgres_data/
-.env
 
-/generated/prisma
+# Environment variables
+.env
+.env.*
+!.env-example
+
+# Prisma generated
+/src/generated/
+
+# TypeScript build cache
+*.tsbuildinfo
+
+# Temporary files
+*.tmp
+*.temp
