@@ -216,6 +216,7 @@ export type teacherWhereInput = {
   lastName?: Prisma.StringNullableFilter<"teacher"> | string | null
   email?: Prisma.StringNullableFilter<"teacher"> | string | null
   phone?: Prisma.StringNullableFilter<"teacher"> | string | null
+  students?: Prisma.StudentListRelationFilter
 }
 
 export type teacherOrderByWithRelationInput = {
@@ -224,6 +225,7 @@ export type teacherOrderByWithRelationInput = {
   lastName?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
+  students?: Prisma.studentOrderByRelationAggregateInput
 }
 
 export type teacherWhereUniqueInput = Prisma.AtLeast<{
@@ -235,6 +237,7 @@ export type teacherWhereUniqueInput = Prisma.AtLeast<{
   firstName?: Prisma.StringNullableFilter<"teacher"> | string | null
   lastName?: Prisma.StringNullableFilter<"teacher"> | string | null
   email?: Prisma.StringNullableFilter<"teacher"> | string | null
+  students?: Prisma.StudentListRelationFilter
 }, "id" | "phone">
 
 export type teacherOrderByWithAggregationInput = {
@@ -266,6 +269,7 @@ export type teacherCreateInput = {
   lastName?: string | null
   email?: string | null
   phone?: string | null
+  students?: Prisma.studentCreateNestedManyWithoutTeacherInput
 }
 
 export type teacherUncheckedCreateInput = {
@@ -274,6 +278,7 @@ export type teacherUncheckedCreateInput = {
   lastName?: string | null
   email?: string | null
   phone?: string | null
+  students?: Prisma.studentUncheckedCreateNestedManyWithoutTeacherInput
 }
 
 export type teacherUpdateInput = {
@@ -281,6 +286,7 @@ export type teacherUpdateInput = {
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  students?: Prisma.studentUpdateManyWithoutTeacherNestedInput
 }
 
 export type teacherUncheckedUpdateInput = {
@@ -289,6 +295,7 @@ export type teacherUncheckedUpdateInput = {
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  students?: Prisma.studentUncheckedUpdateManyWithoutTeacherNestedInput
 }
 
 export type teacherCreateManyInput = {
@@ -312,6 +319,11 @@ export type teacherUncheckedUpdateManyInput = {
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type TeacherNullableScalarRelationFilter = {
+  is?: Prisma.teacherWhereInput | null
+  isNot?: Prisma.teacherWhereInput | null
 }
 
 export type teacherCountOrderByAggregateInput = {
@@ -346,6 +358,97 @@ export type teacherSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
 }
 
+export type teacherCreateNestedOneWithoutStudentsInput = {
+  create?: Prisma.XOR<Prisma.teacherCreateWithoutStudentsInput, Prisma.teacherUncheckedCreateWithoutStudentsInput>
+  connectOrCreate?: Prisma.teacherCreateOrConnectWithoutStudentsInput
+  connect?: Prisma.teacherWhereUniqueInput
+}
+
+export type teacherUpdateOneWithoutStudentsNestedInput = {
+  create?: Prisma.XOR<Prisma.teacherCreateWithoutStudentsInput, Prisma.teacherUncheckedCreateWithoutStudentsInput>
+  connectOrCreate?: Prisma.teacherCreateOrConnectWithoutStudentsInput
+  upsert?: Prisma.teacherUpsertWithoutStudentsInput
+  disconnect?: Prisma.teacherWhereInput | boolean
+  delete?: Prisma.teacherWhereInput | boolean
+  connect?: Prisma.teacherWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.teacherUpdateToOneWithWhereWithoutStudentsInput, Prisma.teacherUpdateWithoutStudentsInput>, Prisma.teacherUncheckedUpdateWithoutStudentsInput>
+}
+
+export type teacherCreateWithoutStudentsInput = {
+  firstName?: string | null
+  lastName?: string | null
+  email?: string | null
+  phone?: string | null
+}
+
+export type teacherUncheckedCreateWithoutStudentsInput = {
+  id?: number
+  firstName?: string | null
+  lastName?: string | null
+  email?: string | null
+  phone?: string | null
+}
+
+export type teacherCreateOrConnectWithoutStudentsInput = {
+  where: Prisma.teacherWhereUniqueInput
+  create: Prisma.XOR<Prisma.teacherCreateWithoutStudentsInput, Prisma.teacherUncheckedCreateWithoutStudentsInput>
+}
+
+export type teacherUpsertWithoutStudentsInput = {
+  update: Prisma.XOR<Prisma.teacherUpdateWithoutStudentsInput, Prisma.teacherUncheckedUpdateWithoutStudentsInput>
+  create: Prisma.XOR<Prisma.teacherCreateWithoutStudentsInput, Prisma.teacherUncheckedCreateWithoutStudentsInput>
+  where?: Prisma.teacherWhereInput
+}
+
+export type teacherUpdateToOneWithWhereWithoutStudentsInput = {
+  where?: Prisma.teacherWhereInput
+  data: Prisma.XOR<Prisma.teacherUpdateWithoutStudentsInput, Prisma.teacherUncheckedUpdateWithoutStudentsInput>
+}
+
+export type teacherUpdateWithoutStudentsInput = {
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type teacherUncheckedUpdateWithoutStudentsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+
+/**
+ * Count Type TeacherCountOutputType
+ */
+
+export type TeacherCountOutputType = {
+  students: number
+}
+
+export type TeacherCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  students?: boolean | TeacherCountOutputTypeCountStudentsArgs
+}
+
+/**
+ * TeacherCountOutputType without action
+ */
+export type TeacherCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TeacherCountOutputType
+   */
+  select?: Prisma.TeacherCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * TeacherCountOutputType without action
+ */
+export type TeacherCountOutputTypeCountStudentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.studentWhereInput
+}
 
 
 export type teacherSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -354,6 +457,8 @@ export type teacherSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   lastName?: boolean
   email?: boolean
   phone?: boolean
+  students?: boolean | Prisma.teacher$studentsArgs<ExtArgs>
+  _count?: boolean | Prisma.TeacherCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["teacher"]>
 
 export type teacherSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -381,10 +486,18 @@ export type teacherSelectScalar = {
 }
 
 export type teacherOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firstName" | "lastName" | "email" | "phone", ExtArgs["result"]["teacher"]>
+export type teacherInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  students?: boolean | Prisma.teacher$studentsArgs<ExtArgs>
+  _count?: boolean | Prisma.TeacherCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type teacherIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type teacherIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $teacherPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "teacher"
-  objects: {}
+  objects: {
+    students: Prisma.$studentPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     firstName: string | null
@@ -785,6 +898,7 @@ readonly fields: teacherFieldRefs;
  */
 export interface Prisma__teacherClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  students<T extends Prisma.teacher$studentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.teacher$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$studentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -836,6 +950,10 @@ export type teacherFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Inter
    */
   omit?: Prisma.teacherOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.teacherInclude<ExtArgs> | null
+  /**
    * Filter, which teacher to fetch.
    */
   where: Prisma.teacherWhereUniqueInput
@@ -854,6 +972,10 @@ export type teacherFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extension
    */
   omit?: Prisma.teacherOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.teacherInclude<ExtArgs> | null
+  /**
    * Filter, which teacher to fetch.
    */
   where: Prisma.teacherWhereUniqueInput
@@ -871,6 +993,10 @@ export type teacherFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Omit specific fields from the teacher
    */
   omit?: Prisma.teacherOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.teacherInclude<ExtArgs> | null
   /**
    * Filter, which teacher to fetch.
    */
@@ -920,6 +1046,10 @@ export type teacherFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions
    */
   omit?: Prisma.teacherOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.teacherInclude<ExtArgs> | null
+  /**
    * Filter, which teacher to fetch.
    */
   where?: Prisma.teacherWhereInput
@@ -968,6 +1098,10 @@ export type teacherFindManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   omit?: Prisma.teacherOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.teacherInclude<ExtArgs> | null
+  /**
    * Filter, which teachers to fetch.
    */
   where?: Prisma.teacherWhereInput
@@ -1010,6 +1144,10 @@ export type teacherCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the teacher
    */
   omit?: Prisma.teacherOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.teacherInclude<ExtArgs> | null
   /**
    * The data needed to create a teacher.
    */
@@ -1058,6 +1196,10 @@ export type teacherUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the teacher
    */
   omit?: Prisma.teacherOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.teacherInclude<ExtArgs> | null
   /**
    * The data needed to update a teacher.
    */
@@ -1125,6 +1267,10 @@ export type teacherUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.teacherOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.teacherInclude<ExtArgs> | null
+  /**
    * The filter to search for the teacher to update in case it exists.
    */
   where: Prisma.teacherWhereUniqueInput
@@ -1151,6 +1297,10 @@ export type teacherDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.teacherOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.teacherInclude<ExtArgs> | null
+  /**
    * Filter which teacher to delete.
    */
   where: Prisma.teacherWhereUniqueInput
@@ -1171,6 +1321,30 @@ export type teacherDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
+ * teacher.students
+ */
+export type teacher$studentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the student
+   */
+  select?: Prisma.studentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the student
+   */
+  omit?: Prisma.studentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.studentInclude<ExtArgs> | null
+  where?: Prisma.studentWhereInput
+  orderBy?: Prisma.studentOrderByWithRelationInput | Prisma.studentOrderByWithRelationInput[]
+  cursor?: Prisma.studentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StudentScalarFieldEnum | Prisma.StudentScalarFieldEnum[]
+}
+
+/**
  * teacher without action
  */
 export type teacherDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1182,4 +1356,8 @@ export type teacherDefaultArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Omit specific fields from the teacher
    */
   omit?: Prisma.teacherOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.teacherInclude<ExtArgs> | null
 }

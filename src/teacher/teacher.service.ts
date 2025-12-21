@@ -29,7 +29,11 @@ export class TeacherService {
   }
 
   teachers() {
-    return this.prisma.teacher.findMany();
+    return this.prisma.teacher.findMany({
+      include: {
+        students: true,
+      },
+    });
   }
 
   async teacher(id: number) {

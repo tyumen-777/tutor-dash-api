@@ -38,8 +38,21 @@ export class StudentService {
         `Студент с email "${createStudentDto.email}" уже существует`,
       );
     }
+    const teacher = await this.prisma.teacher.findUnique({
+      where: { id: createStudentDto.teacherId },
+    });
+
+    if (!teacher) {
+      throw new NotFoundException(
+        `Учитель с id ${createStudentDto.teacherId} не найден`,
+      );
+    }
+    const { teacherId, ...rest } = createStudentDto;
     const student = this.prisma.student.create({
-      data: createStudentDto,
+      data: {
+        ...rest,
+        teacher: { connect: { id: teacherId } },
+      },
     });
     return student;
   }
@@ -53,9 +66,13 @@ export class StudentService {
       throw new NotFoundException(`Студент с id ${id} не найден`);
     }
 
+    const { teacherId, ...rest } = updateStudentDto;
     return this.prisma.student.update({
       where: { id },
-      data: updateStudentDto,
+      data: {
+        ...rest,
+        ...(teacherId && { teacher: { connect: { id: teacherId } } }),
+      },
     });
   }
 

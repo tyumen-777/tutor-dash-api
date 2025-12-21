@@ -80,7 +80,8 @@ export const StudentScalarFieldEnum = {
   phone: 'phone',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  teacherId: 'teacherId'
+  teacherId: 'teacherId',
+  gender: 'gender'
 } as const
 
 export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeof StudentScalarFieldEnum]

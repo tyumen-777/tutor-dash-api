@@ -16,13 +16,21 @@ model student {
   phone     String?  @db.VarChar
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime @default(now()) @db.Timestamp(6)
-  teacherId String?  @db.VarChar
+  teacherId Int?
+  teacher   teacher? @relation(fields: [teacherId], references: [id])
+  gender    Gender   @default(MALE)
 }
 
 model teacher {
-  id        Int     @id(map: "PK_2f807294148612a9751dacf1026") @default(autoincrement())
-  firstName String? @db.VarChar
-  lastName  String? @db.VarChar
-  email     String? @db.VarChar
-  phone     String? @unique @db.VarChar
+  id        Int       @id(map: "PK_2f807294148612a9751dacf1026") @default(autoincrement())
+  firstName String?   @db.VarChar
+  lastName  String?   @db.VarChar
+  email     String?   @db.VarChar
+  phone     String?   @unique @db.VarChar
+  students  student[]
+}
+
+enum Gender {}
+  MALE
+  FEMALE
 }
