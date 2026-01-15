@@ -1,5 +1,13 @@
-import { IsEmail, IsEnum, IsNumber, IsString } from 'class-validator';
-import { Gender } from '../../generated/prisma/enums';
+import {
+  IsDate,
+  IsEmail,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+import { LanguageLevel, Gender } from 'src/generated/prisma/enums';
 
 export class CreateStudentDto {
   @IsString()
@@ -8,8 +16,9 @@ export class CreateStudentDto {
   @IsString()
   lastName: string;
 
-  @IsNumber()
-  age: number;
+  @Type(() => Date)
+  @IsDate()
+  birthDate: Date;
 
   @IsEmail()
   email: string;
@@ -20,6 +29,11 @@ export class CreateStudentDto {
   @IsEnum(Gender)
   gender: Gender;
 
+  @IsOptional()
   @IsNumber()
   teacherId: number;
+
+  @IsOptional()
+  @IsEnum(LanguageLevel)
+  languageLevel?: LanguageLevel;
 }

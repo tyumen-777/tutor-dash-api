@@ -7,30 +7,69 @@ datasource db {
   provider = "postgresql"
 }
 
-model student {
-  id        Int      @id(map: "PK_3d8016e1cb58429474a3c041904") @default(autoincrement())
-  firstName String?  @db.VarChar
-  lastName  String?  @db.VarChar
-  age       Int?
-  email     String?  @unique(map: "UQ_a56c051c91dbe1068ad683f536e") @db.VarChar
-  phone     String?  @db.VarChar
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  updatedAt DateTime @default(now()) @db.Timestamp(6)
-  teacherId Int?
-  teacher   teacher? @relation(fields: [teacherId], references: [id])
-  gender    Gender   @default(MALE)
+model User {
+  id        Int       @id @default(autoincrement())
+  firstName String?
+  lastName  String?
+  birthDate DateTime?
+  email     String?   @unique()
+  phone     String?
+  gender    Gender    @default(MALE)
+  role      UserRole
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //Relations
+  teachersInfo TeacherInfo?
+  studentsInfo StudentInfo?
+
+  @@map("users")
 }
 
-model teacher {
-  id        Int       @id(map: "PK_2f807294148612a9751dacf1026") @default(autoincrement())
-  firstName String?   @db.VarChar
-  lastName  String?   @db.VarChar
-  email     String?   @db.VarChar
-  phone     String?   @unique @db.VarChar
-  students  student[]
+model StudentInfo {
+  userId        Int            @id
+  user          User           @relation(fields: [userId], references: [id])
+  teacherId     Int?
+  languageLevel LanguageLevel?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //Relations
+  teacher TeacherInfo? @relation(fields: [teacherId], references: [userId])
+
+  @@map("students_info")
 }
 
-enum Gender {}
+model TeacherInfo {
+  userId Int  @id
+  user   User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //Relations
+  students StudentInfo[]
+
+  @@map("teachers_info")
+}
+
+enum Gender {
   MALE
   FEMALE
+}
+
+enum UserRole {
+  TEACHER
+  STUDENT
+}
+
+enum LanguageLevel {
+  BEGINNER
+  ELEMENTARY
+  PRE_INTERMEDIATE
+  INTERMEDIATE
+  UPPER_INTERMEDIATE
+  ADVANCED
 }

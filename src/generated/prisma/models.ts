@@ -8,6 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-export type * from './models/student'
-export type * from './models/teacher'
+export type * from './models/User'
+export type * from './models/StudentInfo'
+export type * from './models/TeacherInfo'
 export type * from './commonInputTypes'

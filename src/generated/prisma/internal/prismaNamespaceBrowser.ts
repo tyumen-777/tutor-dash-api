@@ -51,8 +51,9 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  student: 'student',
-  teacher: 'teacher'
+  User: 'User',
+  StudentInfo: 'StudentInfo',
+  TeacherInfo: 'TeacherInfo'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -71,31 +72,40 @@ export const TransactionIsolationLevel = {
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const StudentScalarFieldEnum = {
+export const UserScalarFieldEnum = {
   id: 'id',
   firstName: 'firstName',
   lastName: 'lastName',
-  age: 'age',
+  birthDate: 'birthDate',
   email: 'email',
   phone: 'phone',
+  gender: 'gender',
+  role: 'role',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const StudentInfoScalarFieldEnum = {
+  userId: 'userId',
   teacherId: 'teacherId',
-  gender: 'gender'
+  languageLevel: 'languageLevel',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
-export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeof StudentScalarFieldEnum]
+export type StudentInfoScalarFieldEnum = (typeof StudentInfoScalarFieldEnum)[keyof typeof StudentInfoScalarFieldEnum]
 
 
-export const TeacherScalarFieldEnum = {
-  id: 'id',
-  firstName: 'firstName',
-  lastName: 'lastName',
-  email: 'email',
-  phone: 'phone'
+export const TeacherInfoScalarFieldEnum = {
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
-export type TeacherScalarFieldEnum = (typeof TeacherScalarFieldEnum)[keyof typeof TeacherScalarFieldEnum]
+export type TeacherInfoScalarFieldEnum = (typeof TeacherInfoScalarFieldEnum)[keyof typeof TeacherInfoScalarFieldEnum]
 
 
 export const SortOrder = {
