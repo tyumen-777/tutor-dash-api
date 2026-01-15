@@ -42,7 +42,7 @@ lerna-debug.log*
 !.env-example
 
 # Prisma generated
-/src/generated/
+src/generated/
 
 # TypeScript build cache
 *.tsbuildinfo
