@@ -3,42 +3,52 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-// import { Teacher } from './entities/teacher.entity';
-import { CreateTeacherDto } from './dto/create-teacher.dto';
-import { PrismaService } from 'src/prisma.service';
+import { CreateTeacherDto } from './dto';
+import { PrismaService } from 'src/common/database/prisma.service';
+import { UserRole } from 'src/generated/prisma/enums';
+import { User } from 'src/generated/prisma/client';
 
 @Injectable()
 export class TeacherService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createTeacherDto: CreateTeacherDto) {
-    const existingTeacher = await this.prisma.teacher.findUnique({
-      where: { phone: createTeacherDto.phone },
+  async create(createTeacherDto: CreateTeacherDto): Promise<User> {
+    const existingTeacher = await this.prisma.user.findUnique({
+      where: { email: createTeacherDto.email },
     });
 
     if (existingTeacher) {
       throw new ConflictException(
-        `Учитель c phone "${createTeacherDto.phone}" уже существует`,
+        `Пользователь c email "${createTeacherDto.email}" уже существует`,
       );
     }
-    const teacher = this.prisma.teacher.create({
-      data: createTeacherDto,
+    const teacher = await this.prisma.user.create({
+      data: {
+        ...createTeacherDto,
+        role: UserRole.TEACHER,
+        teachersInfo: { create: {} },
+      },
+      include: { teachersInfo: true },
     });
 
     return teacher;
   }
 
-  teachers() {
-    return this.prisma.teacher.findMany({
+  teachers(): Promise<User[]> {
+    return this.prisma.user.findMany({
+      where: { role: UserRole.TEACHER },
       include: {
-        students: true,
+        teachersInfo: true,
       },
     });
   }
 
   async teacher(id: number) {
-    const res = await this.prisma.teacher.findUnique({
+    const res = await this.prisma.user.findUnique({
       where: { id },
+      include: {
+        teachersInfo: true,
+      },
     });
 
     if (!res) {

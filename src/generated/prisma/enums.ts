@@ -15,3 +15,23 @@ export const Gender = {
 } as const
 
 export type Gender = (typeof Gender)[keyof typeof Gender]
+
+
+export const UserRole = {
+  TEACHER: 'TEACHER',
+  STUDENT: 'STUDENT'
+} as const
+
+export type UserRole = (typeof UserRole)[keyof typeof UserRole]
+
+
+export const LanguageLevel = {
+  BEGINNER: 'BEGINNER',
+  ELEMENTARY: 'ELEMENTARY',
+  PRE_INTERMEDIATE: 'PRE_INTERMEDIATE',
+  INTERMEDIATE: 'INTERMEDIATE',
+  UPPER_INTERMEDIATE: 'UPPER_INTERMEDIATE',
+  ADVANCED: 'ADVANCED'
+} as const
+
+export type LanguageLevel = (typeof LanguageLevel)[keyof typeof LanguageLevel]

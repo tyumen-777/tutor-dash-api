@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.2.0",
   "engineVersion": "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3",
   "activeProvider": "postgresql",
-  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel student {\n  id        Int      @id(map: \"PK_3d8016e1cb58429474a3c041904\") @default(autoincrement())\n  firstName String?  @db.VarChar\n  lastName  String?  @db.VarChar\n  age       Int?\n  email     String?  @unique(map: \"UQ_a56c051c91dbe1068ad683f536e\") @db.VarChar\n  phone     String?  @db.VarChar\n  createdAt DateTime @default(now()) @db.Timestamp(6)\n  updatedAt DateTime @default(now()) @db.Timestamp(6)\n  teacherId Int?\n  teacher   teacher? @relation(fields: [teacherId], references: [id])\n  gender    Gender   @default(MALE)\n}\n\nmodel teacher {\n  id        Int       @id(map: \"PK_2f807294148612a9751dacf1026\") @default(autoincrement())\n  firstName String?   @db.VarChar\n  lastName  String?   @db.VarChar\n  email     String?   @db.VarChar\n  phone     String?   @unique @db.VarChar\n  students  student[]\n}\n\nenum Gender {\n  MALE\n  FEMALE\n}\n",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel User {\n  id        Int       @id @default(autoincrement())\n  firstName String?\n  lastName  String?\n  birthDate DateTime?\n  email     String?   @unique()\n  phone     String?\n  gender    Gender    @default(MALE)\n  role      UserRole\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  //Relations\n  teachersInfo TeacherInfo?\n  studentsInfo StudentInfo?\n\n  @@map(\"users\")\n}\n\nmodel StudentInfo {\n  userId        Int            @id\n  user          User           @relation(fields: [userId], references: [id])\n  teacherId     Int?\n  languageLevel LanguageLevel?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  //Relations\n  teacher TeacherInfo? @relation(fields: [teacherId], references: [userId])\n\n  @@map(\"students_info\")\n}\n\nmodel TeacherInfo {\n  userId Int  @id\n  user   User @relation(fields: [userId], references: [id])\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  //Relations\n  students StudentInfo[]\n\n  @@map(\"teachers_info\")\n}\n\nenum Gender {\n  MALE\n  FEMALE\n}\n\nenum UserRole {\n  TEACHER\n  STUDENT\n}\n\nenum LanguageLevel {\n  BEGINNER\n  ELEMENTARY\n  PRE_INTERMEDIATE\n  INTERMEDIATE\n  UPPER_INTERMEDIATE\n  ADVANCED\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -28,7 +28,7 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"student\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"firstName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"age\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"teacherId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"teacher\",\"kind\":\"object\",\"type\":\"teacher\",\"relationName\":\"studentToteacher\"},{\"name\":\"gender\",\"kind\":\"enum\",\"type\":\"Gender\"}],\"dbName\":null},\"teacher\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"firstName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"students\",\"kind\":\"object\",\"type\":\"student\",\"relationName\":\"studentToteacher\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"firstName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"birthDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"gender\",\"kind\":\"enum\",\"type\":\"Gender\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"UserRole\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"teachersInfo\",\"kind\":\"object\",\"type\":\"TeacherInfo\",\"relationName\":\"TeacherInfoToUser\"},{\"name\":\"studentsInfo\",\"kind\":\"object\",\"type\":\"StudentInfo\",\"relationName\":\"StudentInfoToUser\"}],\"dbName\":\"users\"},\"StudentInfo\":{\"fields\":[{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"StudentInfoToUser\"},{\"name\":\"teacherId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"languageLevel\",\"kind\":\"enum\",\"type\":\"LanguageLevel\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"teacher\",\"kind\":\"object\",\"type\":\"TeacherInfo\",\"relationName\":\"StudentInfoToTeacherInfo\"}],\"dbName\":\"students_info\"},\"TeacherInfo\":{\"fields\":[{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"TeacherInfoToUser\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"students\",\"kind\":\"object\",\"type\":\"StudentInfo\",\"relationName\":\"StudentInfoToTeacherInfo\"}],\"dbName\":\"teachers_info\"}},\"enums\":{},\"types\":{}}")
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
   const { Buffer } = await import('node:buffer')
@@ -58,8 +58,8 @@ export interface PrismaClientConstructor {
    * @example
    * ```
    * const prisma = new PrismaClient()
-   * // Fetch zero or more Students
-   * const students = await prisma.student.findMany()
+   * // Fetch zero or more Users
+   * const users = await prisma.user.findMany()
    * ```
    * 
    * Read more in our [docs](https://pris.ly/d/client).
@@ -80,8 +80,8 @@ export interface PrismaClientConstructor {
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more Students
- * const students = await prisma.student.findMany()
+ * // Fetch zero or more Users
+ * const users = await prisma.user.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -175,24 +175,34 @@ export interface PrismaClient<
   }>>
 
       /**
-   * `prisma.student`: Exposes CRUD operations for the **student** model.
+   * `prisma.user`: Exposes CRUD operations for the **User** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more Students
-    * const students = await prisma.student.findMany()
+    * // Fetch zero or more Users
+    * const users = await prisma.user.findMany()
     * ```
     */
-  get student(): Prisma.studentDelegate<ExtArgs, { omit: OmitOpts }>;
+  get user(): Prisma.UserDelegate<ExtArgs, { omit: OmitOpts }>;
 
   /**
-   * `prisma.teacher`: Exposes CRUD operations for the **teacher** model.
+   * `prisma.studentInfo`: Exposes CRUD operations for the **StudentInfo** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more Teachers
-    * const teachers = await prisma.teacher.findMany()
+    * // Fetch zero or more StudentInfos
+    * const studentInfos = await prisma.studentInfo.findMany()
     * ```
     */
-  get teacher(): Prisma.teacherDelegate<ExtArgs, { omit: OmitOpts }>;
+  get studentInfo(): Prisma.StudentInfoDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.teacherInfo`: Exposes CRUD operations for the **TeacherInfo** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TeacherInfos
+    * const teacherInfos = await prisma.teacherInfo.findMany()
+    * ```
+    */
+  get teacherInfo(): Prisma.TeacherInfoDelegate<ExtArgs, { omit: OmitOpts }>;
 }
 
 export function getPrismaClientClass(): PrismaClientConstructor {

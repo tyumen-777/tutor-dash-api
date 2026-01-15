@@ -3,22 +3,29 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-// import { Student } from './entities/student.entity';
-import { student } from '../generated/prisma/client';
+import { User, UserRole } from '../generated/prisma/client';
 import { CreateStudentDto, UpdateStudentDto } from './dto';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from 'src/common/database/prisma.service';
 
 @Injectable()
 export class StudentService {
   constructor(private prisma: PrismaService) {}
 
-  async students(): Promise<student[]> {
-    return this.prisma.student.findMany();
+  async students(): Promise<User[]> {
+    return this.prisma.user.findMany({
+      where: { role: UserRole.STUDENT },
+      include: {
+        studentsInfo: true,
+      },
+    });
   }
 
   async student(id: number) {
-    const res = await this.prisma.student.findUnique({
+    const res = await this.prisma.user.findUnique({
       where: { id },
+      include: {
+        studentsInfo: true,
+      },
     });
 
     if (!res) {
@@ -28,18 +35,19 @@ export class StudentService {
     return res;
   }
 
-  async create(createStudentDto: CreateStudentDto) {
-    const existingStudent = await this.prisma.student.findUnique({
+  async create(createStudentDto: CreateStudentDto): Promise<User> {
+    const { teacherId, languageLevel, ...userData } = createStudentDto;
+    const existingStudent = await this.prisma.user.findUnique({
       where: { email: createStudentDto.email },
     });
 
     if (existingStudent) {
       throw new ConflictException(
-        `Студент с email "${createStudentDto.email}" уже существует`,
+        `Пользователь с email "${createStudentDto.email}" уже существует`,
       );
     }
-    const teacher = await this.prisma.teacher.findUnique({
-      where: { id: createStudentDto.teacherId },
+    const teacher = await this.prisma.user.findUnique({
+      where: { role: UserRole.TEACHER, id: teacherId },
     });
 
     if (!teacher) {
@@ -47,37 +55,67 @@ export class StudentService {
         `Учитель с id ${createStudentDto.teacherId} не найден`,
       );
     }
-    const { teacherId, ...rest } = createStudentDto;
-    const student = this.prisma.student.create({
+
+    const student = await this.prisma.user.create({
       data: {
-        ...rest,
-        teacher: { connect: { id: teacherId } },
+        ...userData,
+        role: UserRole.STUDENT,
+        studentsInfo: {
+          create: {
+            teacherId: teacher.id,
+            languageLevel,
+          },
+        },
       },
+      include: { studentsInfo: true },
     });
+
     return student;
   }
 
   async update(id: number, updateStudentDto: UpdateStudentDto) {
-    const existingStudent = await this.prisma.student.findUnique({
-      where: { id },
+    const existingStudent = await this.prisma.user.findUnique({
+      where: { id, role: UserRole.STUDENT },
     });
 
     if (!existingStudent) {
       throw new NotFoundException(`Студент с id ${id} не найден`);
     }
 
-    const { teacherId, ...rest } = updateStudentDto;
-    return this.prisma.student.update({
+    if (
+      updateStudentDto.email &&
+      updateStudentDto.email !== existingStudent.email
+    ) {
+      const existingEmail = await this.prisma.user.findUnique({
+        where: { email: updateStudentDto.email },
+      });
+
+      if (existingEmail) {
+        throw new ConflictException(
+          `Пользователь с email "${updateStudentDto.email}" уже существует`,
+        );
+      }
+    }
+
+    const { teacherId, languageLevel, ...rest } = updateStudentDto;
+
+    return this.prisma.user.update({
       where: { id },
       data: {
         ...rest,
-        ...(teacherId && { teacher: { connect: { id: teacherId } } }),
+        studentsInfo: {
+          update: {
+            teacherId,
+            languageLevel,
+          },
+        },
       },
+      include: { studentsInfo: true },
     });
   }
 
   async delete(id: number) {
-    const student = await this.prisma.student.delete({
+    const student = await this.prisma.user.delete({
       where: { id },
     });
     return student;
